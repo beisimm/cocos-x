@@ -50,6 +50,13 @@ export default class NewClass extends cc.Component {
     @property(cc.Label)
     lbScore: cc.Label = null;
 
+    @property(cc.Node)
+    gameOverNode: cc.Node = null;
+
+    @property(cc.Node)
+    btnStrat: cc.Node = null;
+
+
     @property
     text: string = 'hello';
 
@@ -59,6 +66,7 @@ export default class NewClass extends cc.Component {
     time: number = 0; //距离上次切换显示小鸟流逝的时间
     speed: number = 0; //小鸟的重力加速度
     score: number = 0; //得分
+    isStart: boolean = false;
 
     start() {
         let pipeStartOffsetX: number = 200;  //开始偏移量, 让开始的时候都在屏幕外面
@@ -90,6 +98,11 @@ export default class NewClass extends cc.Component {
             }
             this.time = 0;
         }
+
+        if (this.isStart == false) {
+            return
+        }
+
         this.speed -= 0.05;
         this.birdParent.y += this.speed; //小鸟下落, 模拟重力加速度
 
@@ -138,6 +151,35 @@ export default class NewClass extends cc.Component {
         if (bird.y + 12 < pipe.y + 50 && bird.y - 12 > pipe.y - 50) {  //没碰上下这里判断的是不是在上和下的区间
             return
         }
+        this.gameOver()
         console.log("发生了碰撞");
+    }
+
+
+    onButtonStratCilck() {
+        this.isStart = true;
+        this.gameStrat();
+
+    }
+
+    gameStrat() {
+        this.gameOverNode.active = false;
+        this.btnStrat.active = false;
+
+        this.birdParent.y = 0;
+        this.score = 0;
+        let pipeStartOffsetX: number = 200;  //开始偏移量, 让开始的时候都在屏幕外面
+        let spaceX = (288 + 52) / 3;
+        this.pipeParent0.x = pipeStartOffsetX + spaceX * 0;
+        this.pipeParent1.x = pipeStartOffsetX + spaceX * 1;
+        this.pipeParent2.x = pipeStartOffsetX + spaceX * 2;
+
+    }
+
+    gameOver() {
+        this.isStart = false;
+        this.gameOverNode.active = true;
+        this.btnStrat.active = true;
+
     }
 }
