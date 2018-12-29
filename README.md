@@ -1,5 +1,3 @@
-# hello-world
-Hello world new project template.
 # cocos
 
 [官网](https://www.cocos.com/)
@@ -196,3 +194,153 @@ update(){
 ```
 
 ### 游戏流程实现
+
+首先 做一个标记
+
+```typescript
+isStart: boolean = false;
+```
+
+然后游戏中如果标记为false时
+
+```typescript
+update(dt: number) {
+
+        this.time += dt;
+
+        if (this.time > 0.5) {
+
+            if (this.brid0.node.active) {
+
+                this.brid0.node.active = false;
+
+                this.brid1.node.active = true;
+
+            } else if (this.brid1.node.active) {
+
+                this.brid1.node.active = false;
+
+                this.brid2.node.active = true;
+
+
+
+            } else if (this.brid2.node.active) {
+
+                this.brid2.node.active = false;
+
+                this.brid3.node.active = true;
+
+
+
+            } else if (this.brid3.node.active) {
+
+                this.brid3.node.active = false;
+
+                this.brid0.node.active = true;
+
+            }
+
+            this.time = 0;
+
+        }
+
+
+
+        if (this.isStart == false) {
+
+            return
+
+        }
+
+
+
+        this.speed -= 0.05;
+
+        this.birdParent.y += this.speed; //小鸟下落, 模拟重力加速度
+
+
+
+        this.birdParent.angle = this.speed * 10; //小鸟的旋转角度
+
+
+
+        this.bgMove(this.bg0);
+
+        this.bgMove(this.bg1);
+
+        this.pipeMove(this.pipeParent0);
+
+        this.pipeMove(this.pipeParent1);
+
+        this.pipeMove(this.pipeParent2);
+
+        this.checkCollision(this.birdParent, this.pipeParent0);
+
+        this.checkCollision(this.birdParent, this.pipeParent1);
+
+        this.checkCollision(this.birdParent, this.pipeParent2);
+
+
+
+    }
+```
+
+建立两个函数实现游戏开始 的状态和游戏结束的状态
+
+```typescript
+
+
+    gameStrat() {
+
+        this.gameOverNode.active = false;
+
+        this.btnStrat.active = false;
+
+
+
+        this.birdParent.y = 0;
+
+        this.score = 0;
+
+        let pipeStartOffsetX: number = 200;  //开始偏移量, 让开始的时候都在屏幕外面
+
+        let spaceX = (288 + 52) / 3;
+
+        this.pipeParent0.x = pipeStartOffsetX + spaceX * 0;
+
+        this.pipeParent1.x = pipeStartOffsetX + spaceX * 1;
+
+        this.pipeParent2.x = pipeStartOffsetX + spaceX * 2;
+
+
+
+    }
+
+
+
+    gameOver() {
+
+        this.isStart = false;
+
+        this.gameOverNode.active = true;
+
+        this.btnStrat.active = true;
+
+
+
+    }
+```
+
+实现一个按键, 点击之后游戏开始
+
+```typescript
+    onButtonStratCilck() {
+
+        this.isStart = true;
+
+        this.gameStrat();
+
+
+
+    }
+```
